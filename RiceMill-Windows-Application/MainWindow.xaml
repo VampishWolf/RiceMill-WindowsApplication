@@ -5,57 +5,68 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RiceMill_Windows_Application"
         mc:Ignorable="d"
-        Title="Rameswara Rice Mill" Height="768" Width="1366" ResizeMode="NoResize" WindowState="Maximized" WindowStartupLocation="CenterScreen" Topmost="True" WindowStyle="ThreeDBorderWindow" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Center" UseLayoutRounding="True">
+        Title="Rameswara Rice Mill" Height="768" Width="1366" Loaded="MainWindow_Loaded" WindowStartupLocation="CenterScreen" Topmost="True" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Center" UseLayoutRounding="True" WindowStyle="ThreeDBorderWindow" MinWidth="{DynamicResource {x:Static SystemParameters.MinimumWindowWidthKey}}" MinHeight="{DynamicResource {x:Static SystemParameters.MinimumWindowHeightKey}}">
 
+    <Grid Background="#FFE5E5E5">
+        <TabControl Margin="10,41,10,10.4">
+            <TabItem Header="Paddy" FontSize="16">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="308.8"/>
+                        <RowDefinition Height="Auto" MinHeight="375.2"/>
+                        <RowDefinition Height="Auto" MinHeight="102.4"/>
+                    </Grid.RowDefinitions>
+                    <Canvas Margin="109,23,109.4,57.8">
+                        <Label x:Name="partyNameLabel" Content="Party Name" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="1" />
+                        <TextBox x:Name="partyNameInput" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="34" Canvas.Left="145" Canvas.Top="1" ToolTip="Enter the name of the party" />
+                        <Label x:Name="addressLabel" Content="Address" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="38" />
+                        <TextBox x:Name="addressInput" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="32" Canvas.Left="145" Canvas.Top="38" ToolTip="Enter the address of the party" />
+                        <Label x:Name="totalWeightLabel" Content="Total Weight" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="74" />
+                        <TextBox x:Name="totalWeightInput" PreviewTextInput="NumberValidationTextBox" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="33" Canvas.Left="145" Canvas.Top="74" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the total weight" />
+                        <Label x:Name="dateLabel" Content="Date" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="50" Canvas.Left="822" />
+                        <Label x:Name="dateDisplayLabel" Content="DateDisplay" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="280" Canvas.Left="897" ToolTip="Current time display" />
+                        <Label x:Name="moistAllowedLabel" Content="Moist Allowed" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="120" Canvas.Left="822" Canvas.Top="37" />
+                        <TextBox x:Name="moistAllowedInput" FontSize="16" Text="18" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalAlignment="Right" Width="56"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="32" Canvas.Left="974" Canvas.Top="38" ToolTip="Enter the moisture allowed limit" />
+                        <Label x:Name="percentageSignLabel" Content="%" FontSize="16" FontWeight="Bold" HorizontalAlignment="Right" Width="23" Height="32" Canvas.Left="1035" Canvas.Top="38" />
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="10*"/>
-            <RowDefinition Height="45*"/>
-            <RowDefinition Height="35*"/>
-            <RowDefinition Height="10*"/>
-        </Grid.RowDefinitions>
-        <Label x:Name="titleLabel" Content="RAMESWARA RICE MILL PVT. LTD." FontWeight="Bold" Margin="495,10,470,10" FontSize="24" />
-        <Label x:Name="partyNameLabel" Content="Party Name" Margin="110,43,0,258" Grid.Row="1" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" />
-        <TextBox x:Name="partyNameInput" Margin="255,46,0,262" Grid.Row="1" FontSize="16" HorizontalAlignment="Left" Width="275" />
-        <Label x:Name="addressLabel" Content="Address" Margin="110,80,0,221" Grid.Row="1" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" />
-        <TextBox x:Name="addressInput" Margin="255,83,0,225" Grid.Row="1" FontSize="16" HorizontalAlignment="Left" Width="275" />
-        <Label x:Name="dateLabel" Content="Date" Margin="0,43,430,258" Grid.Row="1" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="50" />
-        <Label x:Name="dateDisplayLabel" Content="Date Display" Margin="0,43,125,258" Grid.Row="1" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="280" />
-        <Label x:Name="moistAllowedLabel" Content="Moist Allowed" Margin="0,80,360,221" Grid.Row="1" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="120" />
-        <TextBox x:Name="moistAllowedInput" Margin="0,83,255,225" Grid.Row="1" FontSize="16" Text="18" HorizontalAlignment="Right" Width="70" />
-        <Label x:Name="percentageSignLabel" Content="%" Margin="0,80,220,225" Grid.Row="1" FontSize="16" FontWeight="Bold" HorizontalAlignment="Right" Width="30" />
-
-        <Label x:Name="bagsCountLabel" Content="Bags Count" Margin="110,163,0,138" Grid.Row="1" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" />
-        <TextBox x:Name="bagsCountInput" Margin="255,166,0,142" Grid.Row="1" FontSize="16" HorizontalAlignment="Left" Width="275" />
-        <Label x:Name="itemNameLabel" Content="Item Name" Margin="110,200,0,101" Grid.Row="1" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" />
-        <TextBox x:Name="itemNameInput" Margin="255,203,0,105" Grid.Row="1" FontSize="16" HorizontalAlignment="Left" Width="275" />
-        <Label x:Name="totalWeightLabel" Content="Total Weight" Margin="110,237,0,64" Grid.Row="1" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" />
-        <TextBox x:Name="totalWeightInput" Margin="255,240,0,68" Grid.Row="1" FontSize="16" HorizontalAlignment="Left" Width="275" />
-        <Label x:Name="rateLabel" Content="Rate" Margin="765,163,0,138" Grid.Row="1" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" />
-        <TextBox x:Name="rateInput" Margin="880,166,0,142" Grid.Row="1" FontSize="16" HorizontalAlignment="Left" Width="275" />
-        <Label x:Name="moistLabel" Content="Moist" Margin="765,200,0,101" Grid.Row="1" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" />
-        <TextBox x:Name="moistInput" Margin="880,203,0,105" Grid.Row="1" FontSize="16" HorizontalAlignment="Left" Width="275" />
-        <DataGrid x:Name="DataGridView" Height="258" Grid.Row="2" VerticalAlignment="Top" Margin="60,0,65,0">
-            <DataGrid.Columns>
-                <DataGridTextColumn x:Name="bagsCount" Header="Bags Count" Binding="{Binding bagsCount}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Item Name" Binding="{Binding itemName}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Weight" Binding="{Binding weight}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Rate" Binding="{Binding rate}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Moist" Binding="{Binding moisture}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Claim" Binding="{Binding claim}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Amount" Binding="{Binding amount}"></DataGridTextColumn>
-
-            </DataGrid.Columns>
-        </DataGrid>
-        <Button Content="ADD" HorizontalAlignment="Left" Margin="765,271,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Height="30" Click="Button_Click"/>
-        <Button Content="UPDATE" HorizontalAlignment="Left" Margin="940,271,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Height="30"/>
-        <Button Content="DELETE" HorizontalAlignment="Left" Margin="1110,271,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Height="30"/>
+                        <Label x:Name="bagsCountLabel" Content="Bags Count" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="149" />
+                        <TextBox x:Name="bagsCountInput" PreviewTextInput="NumberValidationTextBox" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="31" Canvas.Left="145" Canvas.Top="151" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the total number of bags" />
+                        <Label x:Name="itemNameLabel" Content="Item Name" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="186" />
+                        <TextBox x:Name="itemNameInput" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="33" Canvas.Left="145" Canvas.Top="186" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the name of the item" />
+                        <Label x:Name="rateLabel" Content="Rate" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Left="707" Canvas.Top="151" />
+                        <TextBox x:Name="rateInput" PreviewTextInput="NumberValidationTextBox" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="31" Canvas.Left="822" Canvas.Top="151" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the rate of the item" />
+                        <Label x:Name="moistLabel" Content="Moist" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Left="707" Canvas.Top="185" />
+                        <TextBox x:Name="moistInput" PreviewTextInput="NumberValidationTextBox" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="32" Canvas.Left="822" Canvas.Top="186" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the moisture reading" />
+                        <Button Content="ADD" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="655" Canvas.Top="243" Cursor="Hand" Click="Add_Click" ToolTip="Click to add the item"/>
+                        <Button Content="UPDATE" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="830" Canvas.Top="243" Cursor="Hand" Click="Update_Click" ToolTip="Click to update the item"/>
+                        <Button Content="DELETE" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="1000" Canvas.Top="243" Cursor="Hand" Click="Delete_Click" ToolTip="Click to delete the item"/>
 
 
 
 
 
+                    </Canvas>
+                    <DataGrid x:Name="DataGridView" Height="258" Grid.Row="1" VerticalAlignment="Top" Margin="55,0.2,70.4,0" MinColumnWidth="120" CanUserSortColumns="False" CanUserReorderColumns="False" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Bags Count" Binding="{Binding BagsCount}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Item Name" Binding="{Binding ItemName}" MinWidth="250"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Rate" Binding="{Binding Rate}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Amount" Binding="{Binding Amt}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Moist" Binding="{Binding Moisture}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Claim" Binding="{Binding Claim}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Final Amount" Binding="{Binding Amount}"></DataGridTextColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Voucher" FontSize="16">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+        <Label x:Name="titleLabel_Copy" Content="RAMESWARA RICE MILL PVT. LTD." FontWeight="Bold" Margin="353,2,369,679.4" FontSize="24" TextOptions.TextFormattingMode="Display" TextOptions.TextHintingMode="Animated" FontStretch="SemiExpanded" ClipToBounds="True" SnapsToDevicePixels="True" HorizontalContentAlignment="Center" VerticalAlignment="Stretch"/>
     </Grid>
+
 
 </Window>
