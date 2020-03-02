@@ -11,10 +11,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Text.RegularExpressions;
-/*using MessageBox = System.Windows.MessageBox;*/
+using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
 
 namespace RiceMill_Windows_Application
 {
@@ -40,47 +40,35 @@ namespace RiceMill_Windows_Application
 			dateDisplayLabel.Content = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt");
 		}
 
-		/*private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-		{
-			if (e.RowIndex >= 0)
-			{
-
-				*//*DataGridViewRow row = this.DataGridView.Rows[e.RowIndex];*//*
-				DataGridViewRow row = DataGridView.SelectedRows[1];
-
-				bagsCountInput.Text = row.Cells["BagsCount"].Value.ToString();
-				totalWeightInput.Text = row.Cells["ItemName"].Value.ToString();
-				rateInput.Text = row.Cells["Weight"].Value.ToString();
-				moistAllowedInput.Text = row.Cells["Rate"].Value.ToString();
-				moistInput.Text = row.Cells["Moisture"].Value.ToString();
-
-			}
-
-		}*/
-
+		public int serialnumber = 1;
+	
 		private void Add_Click(object sender, RoutedEventArgs e)
 		{
 			try
-			{				
+			{
 				int bagscount = Convert.ToInt32(bagsCountInput.Text);
+				var name = itemNameInput.Text;
 				float totalweight = Convert.ToInt32(totalWeightInput.Text);
 				float weight = totalweight / bagscount;
 				float rate = Convert.ToInt32(rateInput.Text);
 				float amount = bagscount * rate;
 				float moistallowed = Convert.ToInt32(moistAllowedInput.Text);
 				float moist = Convert.ToInt32(moistInput.Text);
-				float claim;				
-				if (moist <= 18){
+				float claim;
+				if (moist <= 18) {
 					claim = 0;
-				} else
-				{
+				}
+				else {
 					claim = moist - moistallowed;
 				}
+				if (moist >= 100) {
+					MessageBox.Show("Invalid Moist!");
+					return;
+				}
 				float claimant = (claim * amount) / 100;
-				float finalamount = (bagscount * rate) - claimant;
-				// DataGridView.Rows.Add( bagscount, itemNameInput.Text, weight, rate, moist, claim, amount );
-				DataGridView.Items.Add(new { BagsCount = bagscount, ItemName = itemNameInput.Text, Weight = weight, Rate = rate, Amt = amount, Moisture = moist, Claim = claim, Amount = finalamount });
-				// DataGridView.Items.Add(bagscount);
+				float finalamount = amount - claimant;
+				DataGridView.Items.Add(new BindingData { Number = serialnumber, BagsCount = bagscount, ItemName = name, Weight = weight, Rate = rate, Amount = amount, Moisture = moist, Claim = claim, FinalAmount = finalamount });
+				serialnumber += 1;
 			} catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message.ToString());
@@ -92,6 +80,7 @@ namespace RiceMill_Windows_Application
 			try
 			{
 				int bagscount = Convert.ToInt32(bagsCountInput.Text);
+				var name = itemNameInput.Text;
 				float totalweight = Convert.ToInt32(totalWeightInput.Text);
 				float weight = totalweight / bagscount;
 				float rate = Convert.ToInt32(rateInput.Text);
@@ -99,19 +88,34 @@ namespace RiceMill_Windows_Application
 				float moistallowed = Convert.ToInt32(moistAllowedInput.Text);
 				float moist = Convert.ToInt32(moistInput.Text);
 				float claim;
-				if (moist <= 18)
-				{
+				if (moist <= 18) {
 					claim = 0;
 				}
-				else
-				{
+				else {
 					claim = moist - moistallowed;
 				}
+				if (moist >= 100) {
+					MessageBox.Show("Invalid Moist!");
+					return;
+				}
 				float claimant = (claim * amount) / 100;
-				float finalamount = (bagscount * rate) - claimant;
-				// DataGridView.Rows.Add( bagscount, itemNameInput.Text, weight, rate, moist, claim, amount );
-				DataGridView.Items.Add(new { BagsCount = bagscount, ItemName = itemNameInput.Text, Weight = weight, Rate = rate, Amt = amount, Moisture = moist, Claim = claim, Amount = finalamount });
-				// DataGridView.Items.Add(bagscount);
+				float finalamount = amount - claimant;
+				var grid = DataGridView;
+				if (grid.SelectedItem != null)
+				{
+					BindingData item = (BindingData)grid.SelectedItem;
+					item.BagsCount = bagscount;
+					item.ItemName = name;
+					item.Weight = weight;
+					item.Rate = rate;
+					item.Amount = amount;
+					item.Moisture = moist;
+					item.Claim = claim;
+					item.FinalAmount = finalamount;
+
+					grid.Items.Refresh();
+				}
+
 			}
 			catch (Exception ex)
 			{
@@ -138,12 +142,75 @@ namespace RiceMill_Windows_Application
 			}
 
 		}
+		private void Reset_Click(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				var grid = DataGridView;
+				grid.Items.Clear();
+				grid.Items.Refresh();
+				serialnumber = 0;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message.ToString());
+			}
+
+		}
+
+		private void Print_Click(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				System.Windows.Controls.PrintDialog printDlg = new System.Windows.Controls.PrintDialog();
+				if (printDlg.ShowDialog() == true)
+				{
+					//get selected printer capabilities
+					System.Printing.PrintCapabilities capabilities = printDlg.PrintQueue.GetPrintCapabilities(printDlg.PrintTicket);
+
+					//get scale of the print wrt to screen of WPF visual
+					double scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / this.ActualWidth, capabilities.PageImageableArea.ExtentHeight /
+						   this.ActualHeight);
+
+					//Transform the Visual to scale
+					this.LayoutTransform = new ScaleTransform(scale, scale);
+
+					//get the size of the printer page
+					Size sz = new Size(capabilities.PageImageableArea.ExtentWidth, capabilities.PageImageableArea.ExtentHeight);
+
+					//update the layout of the visual to the printer page size.
+					this.Measure(sz);
+					this.Arrange(new Rect(new Point(capabilities.PageImageableArea.OriginWidth, capabilities.PageImageableArea.OriginHeight), sz));
+
+					//now print the visual to printer to fit on the one page.
+					printDlg.PrintVisual(this, "First Fit to Page WPF Print");
+
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message.ToString());
+			}
+
+		}
 		private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
 		{
-			Regex regex = new Regex("[^0-9]+");
+			Regex regex = new Regex("[^0-9.]+");
 			e.Handled = regex.IsMatch(e.Text);
 		}
 
-		
+		public class BindingData
+		{
+			public int Number { get; set; }
+			public int BagsCount { get; set; }
+			public string ItemName { get; set; }
+			public float Weight { get; set; }
+			public float Rate { get; set; }
+			public float Amt { get; set; }
+			public float Moisture { get; set; }
+			public float Claim { get; set; }
+			public float Amount { get; set; }
+			public float FinalAmount { get; set; }
+		}
 	}
 }
