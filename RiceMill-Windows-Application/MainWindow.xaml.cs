@@ -16,6 +16,12 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
 
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
+using Paragraph = iTextSharp.text.Paragraph;
+using System.Data;
+
 namespace RiceMill_Windows_Application
 {
 	/// <summary>
@@ -41,7 +47,7 @@ namespace RiceMill_Windows_Application
 		}
 
 		public int serialnumber = 1;
-	
+
 		private void Add_Click(object sender, RoutedEventArgs e)
 		{
 			try
@@ -142,6 +148,17 @@ namespace RiceMill_Windows_Application
 			}
 
 		}
+
+		/*private void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+		{
+			var grid = DataGridView;
+			if (grid.SelectedItem != null)
+			{								
+				BindingData item = (BindingData)grid.SelectedItem;
+				bagsCountInput.Text = item.BagsCount.ToString();
+			}
+		}*/
+
 		private void Reset_Click(object sender, RoutedEventArgs e)
 		{
 			try
@@ -149,50 +166,148 @@ namespace RiceMill_Windows_Application
 				var grid = DataGridView;
 				grid.Items.Clear();
 				grid.Items.Refresh();
-				serialnumber = 0;
+				serialnumber = 1;
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message.ToString());
 			}
-
 		}
 
 		private void Print_Click(object sender, RoutedEventArgs e)
 		{
 			try
 			{
-				System.Windows.Controls.PrintDialog printDlg = new System.Windows.Controls.PrintDialog();
-				if (printDlg.ShowDialog() == true)
+				if (partyNameInput.Text == "" || addressInput.Text == "" || vehicleNumberInput.Text == "" || totalWeightInput.Text == "" || itemNameInput.Text == "Choose an Item" || bagsCountInput.Text == "" || rateInput.Text == "" || moistInput.Text == "" || moistAllowedInput.Text == "")
 				{
-					//get selected printer capabilities
-					System.Printing.PrintCapabilities capabilities = printDlg.PrintQueue.GetPrintCapabilities(printDlg.PrintTicket);
-
-					//get scale of the print wrt to screen of WPF visual
-					double scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / this.ActualWidth, capabilities.PageImageableArea.ExtentHeight /
-						   this.ActualHeight);
-
-					//Transform the Visual to scale
-					this.LayoutTransform = new ScaleTransform(scale, scale);
-
-					//get the size of the printer page
-					Size sz = new Size(capabilities.PageImageableArea.ExtentWidth, capabilities.PageImageableArea.ExtentHeight);
-
-					//update the layout of the visual to the printer page size.
-					this.Measure(sz);
-					this.Arrange(new Rect(new Point(capabilities.PageImageableArea.OriginWidth, capabilities.PageImageableArea.OriginHeight), sz));
-
-					//now print the visual to printer to fit on the one page.
-					printDlg.PrintVisual(this, "First Fit to Page WPF Print");
-
+					MessageBox.Show("Please enter all the required fields");
+					return;
 				}
+
+				// File Naming Convention
+				/*string fileName = string.Empty;
+				DateTime fileCreationDatetime = DateTime.Now;
+				fileName = string.Format("{0}.pdf", fileCreationDatetime.ToString(@"yyyyMMdd") + "_" + fileCreationDatetime.ToString(@"HHmmss"));*/
+				/*string pdfPath = Server.MapPath(@"~\PDFs\") + fileName;*/						// Leave Commented
+
+				string paddyPrintDocumentPath = "D:\\PaddyPrint.PDF";                           //Comment Later
+				Document document = new Document(PageSize.A5.Rotate(), 5, 5, 5, 5);
+				PdfWriter.GetInstance(document, new FileStream(paddyPrintDocumentPath, FileMode.Create));
+				document.Open();
+
+				Chunk lineBreaks = new Chunk("\n");
+				
+				PdfPTable pageHeader = new PdfPTable(2)
+				{
+					WidthPercentage = 100
+				};
+				PdfPCell gst = new PdfPCell(new Phrase(new Chunk("GST: 20AAECR5776M1Z1", FontFactory.GetFont("Verdana", 10))));
+				PdfPCell contact = new PdfPCell(new Phrase(new Chunk("Mob: +91 8210622847 \n+91 7004310634", FontFactory.GetFont("Verdana", 10))));
+			
+				gst.Border = contact.Border = 0;
+				gst.HorizontalAlignment = Element.ALIGN_LEFT;
+				contact.HorizontalAlignment = Element.ALIGN_RIGHT;
+
+				pageHeader.AddCell(gst);
+				pageHeader.AddCell(contact);
+
+				Paragraph pageTitle = new Paragraph
+				{
+					new Chunk("RAMESWARA RICE MILL PVT. LTD. \n", FontFactory.GetFont("HELVETICA", 14, Font.BOLD)),
+					new Chunk("Saharpura, Jamtara - 815351 (Jharkhand)", FontFactory.GetFont("HELVETICA", 10)),
+				};
+				pageTitle.Alignment = Element.ALIGN_CENTER;
+
+				//-----------------------------------------------------------------------------------------------------------------------------------------------
+				// Header ENDS
+
+			
+
+				PdfPTable pageBody = new PdfPTable(4);
+				pageBody.SetWidths(new float[] { 8f, 12f, 8f, 12f });
+
+				PdfPCell partyName = new PdfPCell(new Phrase(new Chunk("Party Name: ", FontFactory.GetFont("Verdana", 10))));
+				PdfPCell partyNameData = new PdfPCell(new Phrase(new Chunk(partyNameInput.Text.ToString(), FontFactory.GetFont("Verdana", 10))));
+				PdfPCell date = new PdfPCell(new Phrase(new Chunk("Date: ", FontFactory.GetFont("Verdana", 10))));
+				PdfPCell dateData = new PdfPCell(new Phrase(new Chunk(dateDisplayLabel.Content.ToString(), FontFactory.GetFont("Verdana", 10))));
+				PdfPCell partyAddress = new PdfPCell(new Phrase(new Chunk("Party Address: ", FontFactory.GetFont("Verdana", 10))));
+				PdfPCell partyAddressData = new PdfPCell(new Phrase(new Chunk(addressInput.Text.ToString(), FontFactory.GetFont("Verdana", 10))));
+				PdfPCell moistAllowed = new PdfPCell(new Phrase(new Chunk("Moist Allowed: ", FontFactory.GetFont("Verdana", 10))));
+				PdfPCell moistAllowedData = new PdfPCell(new Phrase(new Chunk(moistAllowedInput.Text.ToString() + " %", FontFactory.GetFont("Verdana", 10))));
+				PdfPCell vehicleNumber = new PdfPCell(new Phrase(new Chunk("Vehicle Number: ", FontFactory.GetFont("Verdana", 10))));
+				PdfPCell vehicleNumberData = new PdfPCell(new Phrase(new Chunk(vehicleNumberInput.Text.ToString(), FontFactory.GetFont("Verdana", 10))));
+				PdfPCell totalWeight = new PdfPCell(new Phrase(new Chunk("Total Weight: ", FontFactory.GetFont("Verdana", 10))));
+				PdfPCell totalWeightData = new PdfPCell(new Phrase(new Chunk(totalWeightInput.Text.ToString(), FontFactory.GetFont("Verdana", 10))));
+				
+				PdfPCell blank = new PdfPCell();
+
+
+				partyName.Border = partyNameData.Border = date.Border = dateData.Border = partyAddress.Border = partyAddressData.Border = moistAllowed.Border = moistAllowedData.Border = vehicleNumber.Border = vehicleNumberData.Border = totalWeight.Border = totalWeightData.Border = blank.Border = 0;
+				pageBody.AddCell(partyName);
+				pageBody.AddCell(partyNameData);
+				pageBody.AddCell(date);
+				pageBody.AddCell(dateData);
+				pageBody.AddCell(partyAddress);
+				pageBody.AddCell(partyAddressData);
+				pageBody.AddCell(moistAllowed);
+				pageBody.AddCell(moistAllowedData);
+				pageBody.AddCell(vehicleNumber);
+				pageBody.AddCell(vehicleNumberData);
+				pageBody.AddCell(blank);
+				pageBody.AddCell(blank);
+				pageBody.AddCell(totalWeight);
+				pageBody.AddCell(totalWeightData);
+				pageBody.AddCell(blank);
+				pageBody.AddCell(blank);
+				
+							
+				//-----------------------------------------------------------------------------------------------------------------------------------------------
+				// Table Starts
+
+				PdfPTable pageBodyDataGrid = new PdfPTable(9) { WidthPercentage = 90 };
+				pageBodyDataGrid.SetWidths(new float[] { 2f, 8f, 4f, 4f, 4f, 4f, 4f, 4f, 6f});
+				
+				PdfPCell seqNo = new PdfPCell(new Phrase(new Chunk("#", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell itemName = new PdfPCell(new Phrase(new Chunk("Item Name", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell bagsCount = new PdfPCell(new Phrase(new Chunk("Bags Count", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell weight = new PdfPCell(new Phrase(new Chunk("Weight", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell amount = new PdfPCell(new Phrase(new Chunk("Rate", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell rate = new PdfPCell(new Phrase(new Chunk("Amount", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell moist = new PdfPCell(new Phrase(new Chunk("Moist", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell claim = new PdfPCell(new Phrase(new Chunk("Claim", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell finalAmount = new PdfPCell(new Phrase(new Chunk("Final Amount", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				seqNo.BackgroundColor = itemName.BackgroundColor = bagsCount.BackgroundColor = weight.BackgroundColor = amount.BackgroundColor = rate.BackgroundColor = moist.BackgroundColor = claim.BackgroundColor = finalAmount.BackgroundColor = BaseColor.LIGHT_GRAY;
+
+				pageBodyDataGrid.AddCell(seqNo);
+				pageBodyDataGrid.AddCell(itemName);
+				pageBodyDataGrid.AddCell(bagsCount);
+				pageBodyDataGrid.AddCell(weight);
+				pageBodyDataGrid.AddCell(rate);
+				pageBodyDataGrid.AddCell(amount);
+				pageBodyDataGrid.AddCell(moist);
+				pageBodyDataGrid.AddCell(claim);
+				pageBodyDataGrid.AddCell(finalAmount);
+
+
+		
+				document.Add(pageHeader);
+				document.Add(pageTitle);
+				document.Add(lineBreaks);
+				document.Add(pageBody);
+				document.Add(lineBreaks);
+				document.Add(pageBodyDataGrid);
+
+				MessageBox.Show("Document created Successfully! Click OK to continue...");
+				document.Close();
+				System.Diagnostics.Process.Start(@paddyPrintDocumentPath);
+
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message.ToString());
 			}
-
 		}
+	
 		private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
 		{
 			Regex regex = new Regex("[^0-9.]+");
@@ -212,5 +327,5 @@ namespace RiceMill_Windows_Application
 			public float Amount { get; set; }
 			public float FinalAmount { get; set; }
 		}
-	}
+	}	
 }
