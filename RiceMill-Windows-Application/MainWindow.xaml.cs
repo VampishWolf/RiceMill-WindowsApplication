@@ -47,19 +47,60 @@ namespace RiceMill_Windows_Application
 		}
 
 		public int serialnumber = 1;
+		public float individaulWeight = 0;
+
+		private void Unlock_Click(object sender, RoutedEventArgs e)
+		{
+			partyNameInput.IsEnabled = addressInput.IsEnabled = vehicleNumberInput.IsEnabled = totalWeightInput.IsEnabled = true;
+			LockedImage.Visibility = UnlockedImage.Visibility;
+			UnlockedImage.Visibility = Visibility.Visible;
+		}
 
 		private void Add_Click(object sender, RoutedEventArgs e)
 		{
 			try
 			{
+				if (partyNameInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Party Name", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				}
+				else if (addressInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Party Address", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				}
+				else if (vehicleNumberInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Vehicle Number", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				}
+				else if (itemNameInput.SelectedIndex == 0)
+				{
+					MessageBox.Show("Please select the Item Name", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				} else if (bagsCountInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Bags count", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				} else if (rateInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Rate", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				} else if (moistInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Moisture", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				}
+
 				int bagscount = Convert.ToInt32(bagsCountInput.Text);
 				var name = itemNameInput.Text;
-				float totalweight = Convert.ToInt32(totalWeightInput.Text);
+				float totalweight = float.Parse(totalWeightInput.Text);
 				float weight = totalweight / bagscount;
-				float rate = Convert.ToInt32(rateInput.Text);
+				float rate = float.Parse(rateInput.Text);
 				float amount = bagscount * rate;
-				float moistallowed = Convert.ToInt32(moistAllowedInput.Text);
-				float moist = Convert.ToInt32(moistInput.Text);
+				float moistallowed = float.Parse(moistAllowedInput.Text);
+				float moist = float.Parse(moistInput.Text);
 				float claim;
 				if (moist <= 18) {
 					claim = 0;
@@ -68,31 +109,68 @@ namespace RiceMill_Windows_Application
 					claim = moist - moistallowed;
 				}
 				if (moist >= 100) {
-					MessageBox.Show("Invalid Moist!");
+					MessageBox.Show("Invalid Moist!", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
 					return;
 				}
 				float claimant = (claim * amount) / 100;
 				float finalamount = amount - claimant;
-				DataGridView.Items.Add(new BindingData { Number = serialnumber, BagsCount = bagscount, ItemName = name, Weight = weight, Rate = rate, Amount = amount, Moisture = moist, Claim = claim, FinalAmount = finalamount });
+				var grid = DataGridView;
+				int gridRows = grid.Items.Count;
+
+				grid.Items.Add(new BindingData { Number = serialnumber, BagsCount = bagscount, ItemName = name, Weight = weight, Rate = rate, Amount = amount, Moisture = moist, Claim = claim, FinalAmount = finalamount });
+				grid.Items.Refresh();
 				serialnumber += 1;
+
+				partyNameInput.IsEnabled = addressInput.IsEnabled = vehicleNumberInput.IsEnabled = totalWeightInput.IsEnabled = false;
+				UnlockedImage.Visibility = LockedImage.Visibility;
+				LockedImage.Visibility = Visibility.Visible;
+				/*itemNameInput.SelectedIndex = 0;
+				bagsCountInput.Text = rateInput.Text = moistInput.Text = "";*/
+								
 			} catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message.ToString());
 			}
-			
 		}
+
 		private void Update_Click(object sender, RoutedEventArgs e)
 		{
 			try
 			{
+				if (DataGridView.Items.Count == 0)
+				{
+					MessageBox.Show("Please enter some data first", "Warning Message",  MessageBoxButton.OK, MessageBoxImage.Warning);
+					return;
+				}
+				else if (itemNameInput.SelectedIndex == 0)
+				{
+					MessageBox.Show("Please select the Item from the Table", "Warning Message", MessageBoxButton.OK, MessageBoxImage.Warning);
+					return;
+				}
+				else if (bagsCountInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Bags count", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				}
+				else if (rateInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Rate", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				}
+				else if (moistInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Moisture", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				}
+				
 				int bagscount = Convert.ToInt32(bagsCountInput.Text);
 				var name = itemNameInput.Text;
-				float totalweight = Convert.ToInt32(totalWeightInput.Text);
+				float totalweight = float.Parse(totalWeightInput.Text);
 				float weight = totalweight / bagscount;
-				float rate = Convert.ToInt32(rateInput.Text);
+				float rate = float.Parse(rateInput.Text);
 				float amount = bagscount * rate;
-				float moistallowed = Convert.ToInt32(moistAllowedInput.Text);
-				float moist = Convert.ToInt32(moistInput.Text);
+				float moistallowed = float.Parse(moistAllowedInput.Text);
+				float moist = float.Parse(moistInput.Text);
 				float claim;
 				if (moist <= 18) {
 					claim = 0;
@@ -101,7 +179,7 @@ namespace RiceMill_Windows_Application
 					claim = moist - moistallowed;
 				}
 				if (moist >= 100) {
-					MessageBox.Show("Invalid Moist!");
+					MessageBox.Show("Invalid Moist!", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
 					return;
 				}
 				float claimant = (claim * amount) / 100;
@@ -127,8 +205,8 @@ namespace RiceMill_Windows_Application
 			{
 				MessageBox.Show(ex.Message.ToString());
 			}
-
 		}
+
 		private void Delete_Click(object sender, RoutedEventArgs e)
 		{
 			try
@@ -148,17 +226,7 @@ namespace RiceMill_Windows_Application
 			}
 
 		}
-
-		/*private void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
-		{
-			var grid = DataGridView;
-			if (grid.SelectedItem != null)
-			{								
-				BindingData item = (BindingData)grid.SelectedItem;
-				bagsCountInput.Text = item.BagsCount.ToString();
-			}
-		}*/
-
+				
 		private void Reset_Click(object sender, RoutedEventArgs e)
 		{
 			try
@@ -178,50 +246,60 @@ namespace RiceMill_Windows_Application
 		{
 			try
 			{
-				if (partyNameInput.Text == "" || addressInput.Text == "" || vehicleNumberInput.Text == "" || totalWeightInput.Text == "" || itemNameInput.Text == "Choose an Item" || bagsCountInput.Text == "" || rateInput.Text == "" || moistInput.Text == "" || moistAllowedInput.Text == "")
+				if (DataGridView.Items.Count == 0)
 				{
-					MessageBox.Show("Please enter all the required fields");
+					MessageBox.Show("Please enter some data first", "Warning Message", MessageBoxButton.OK, MessageBoxImage.Warning);
+					return;
+				} else if (kantaInput.SelectedIndex == 0)
+				{
+					MessageBox.Show("Please enter the Kanta Deduction", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
 					return;
 				}
 
-				// File Naming Convention
-				/*string fileName = string.Empty;
-				DateTime fileCreationDatetime = DateTime.Now;
-				fileName = string.Format("{0}.pdf", fileCreationDatetime.ToString(@"yyyyMMdd") + "_" + fileCreationDatetime.ToString(@"HHmmss"));*/
-				/*string pdfPath = Server.MapPath(@"~\PDFs\") + fileName;*/						// Leave Commented
-
-				string paddyPrintDocumentPath = "D:\\PaddyPrint.PDF";                           //Comment Later
-				Document document = new Document(PageSize.A5.Rotate(), 5, 5, 5, 5);
-				PdfWriter.GetInstance(document, new FileStream(paddyPrintDocumentPath, FileMode.Create));
-				document.Open();
-
-				Chunk lineBreaks = new Chunk("\n");
+				string fileName = string.Empty;                                         // FILE NAMING CONVENTION
+				/*DateTime fileCreationDatetime = DateTime.Now;*/						// USE TO ADD DATE IN FILENAME
+				fileName = "PaddyPrint.PDF"; /*string.Format("{0}.pdf", fileCreationDatetime.ToString(@"yyyyMMdd") + "_" + fileCreationDatetime.ToString(@"HHmmss"));*/
 				
-				PdfPTable pageHeader = new PdfPTable(2)
+				//-----------------------------------------------------------------------------------------------------------------------------------------------
+				// HEADER STARTS
+
+				Document document = new Document(PageSize.A5.Rotate(), 5, 5, 5, 5);
+				PdfWriter.GetInstance(document, new FileStream(fileName, FileMode.Create));
+				
+				Chunk lineBreaks = new Chunk("\n");
+				PdfPCell blank = new PdfPCell();
+
+				PdfPTable pageHeader = new PdfPTable(3)
 				{
 					WidthPercentage = 100
 				};
 				PdfPCell gst = new PdfPCell(new Phrase(new Chunk("GST: 20AAECR5776M1Z1", FontFactory.GetFont("Verdana", 10))));
+				PdfPCell farmerPaddy = new PdfPCell(new Phrase(new Chunk("\nFARMER PADDY", FontFactory.GetFont("Verdana", 8))));
+				PdfPCell purchaseMemo = new PdfPCell(new Phrase(new Chunk("Purchase Memo\n", FontFactory.GetFont("Verdana", 8, Font.UNDERLINE))));
 				PdfPCell contact = new PdfPCell(new Phrase(new Chunk("Mob: +91 8210622847 \n+91 7004310634", FontFactory.GetFont("Verdana", 10))));
 			
-				gst.Border = contact.Border = 0;
+				gst.Border = contact.Border = farmerPaddy.Border = purchaseMemo.Border = blank.Border = 0;
 				gst.HorizontalAlignment = Element.ALIGN_LEFT;
+				farmerPaddy.HorizontalAlignment = purchaseMemo.HorizontalAlignment = Element.ALIGN_CENTER;
 				contact.HorizontalAlignment = Element.ALIGN_RIGHT;
 
 				pageHeader.AddCell(gst);
+				pageHeader.AddCell(farmerPaddy);
 				pageHeader.AddCell(contact);
+				pageHeader.AddCell(blank);
+				pageHeader.AddCell(purchaseMemo);
+				pageHeader.AddCell(blank);
 
 				Paragraph pageTitle = new Paragraph
-				{
+				{					
 					new Chunk("RAMESWARA RICE MILL PVT. LTD. \n", FontFactory.GetFont("HELVETICA", 14, Font.BOLD)),
 					new Chunk("Saharpura, Jamtara - 815351 (Jharkhand)", FontFactory.GetFont("HELVETICA", 10)),
 				};
 				pageTitle.Alignment = Element.ALIGN_CENTER;
 
 				//-----------------------------------------------------------------------------------------------------------------------------------------------
-				// Header ENDS
-
-			
+				// BODY ENDS
+							
 
 				PdfPTable pageBody = new PdfPTable(4);
 				pageBody.SetWidths(new float[] { 8f, 12f, 8f, 12f });
@@ -236,13 +314,11 @@ namespace RiceMill_Windows_Application
 				PdfPCell moistAllowedData = new PdfPCell(new Phrase(new Chunk(moistAllowedInput.Text.ToString() + " %", FontFactory.GetFont("Verdana", 10))));
 				PdfPCell vehicleNumber = new PdfPCell(new Phrase(new Chunk("Vehicle Number: ", FontFactory.GetFont("Verdana", 10))));
 				PdfPCell vehicleNumberData = new PdfPCell(new Phrase(new Chunk(vehicleNumberInput.Text.ToString(), FontFactory.GetFont("Verdana", 10))));
-				PdfPCell totalWeight = new PdfPCell(new Phrase(new Chunk("Total Weight: ", FontFactory.GetFont("Verdana", 10))));
-				PdfPCell totalWeightData = new PdfPCell(new Phrase(new Chunk(totalWeightInput.Text.ToString(), FontFactory.GetFont("Verdana", 10))));
+				PdfPCell totalweight = new PdfPCell(new Phrase(new Chunk("Total Weight: ", FontFactory.GetFont("Verdana", 10))));
+				PdfPCell totalWeightData = new PdfPCell(new Phrase(new Chunk(totalWeightInput.Text.ToString() + "     (Qtls.)", FontFactory.GetFont("Verdana", 10))));
 				
-				PdfPCell blank = new PdfPCell();
-
-
-				partyName.Border = partyNameData.Border = date.Border = dateData.Border = partyAddress.Border = partyAddressData.Border = moistAllowed.Border = moistAllowedData.Border = vehicleNumber.Border = vehicleNumberData.Border = totalWeight.Border = totalWeightData.Border = blank.Border = 0;
+								
+				partyName.Border = partyNameData.Border = date.Border = dateData.Border = partyAddress.Border = partyAddressData.Border = moistAllowed.Border = moistAllowedData.Border = vehicleNumber.Border = vehicleNumberData.Border = totalweight.Border = totalWeightData.Border = 0;
 				pageBody.AddCell(partyName);
 				pageBody.AddCell(partyNameData);
 				pageBody.AddCell(date);
@@ -255,24 +331,25 @@ namespace RiceMill_Windows_Application
 				pageBody.AddCell(vehicleNumberData);
 				pageBody.AddCell(blank);
 				pageBody.AddCell(blank);
-				pageBody.AddCell(totalWeight);
+				pageBody.AddCell(totalweight);
 				pageBody.AddCell(totalWeightData);
 				pageBody.AddCell(blank);
 				pageBody.AddCell(blank);
 				
-							
+
+				/*pageBody.HorizontalAlignment = Element.ALIGN_LEFT;*/
 				//-----------------------------------------------------------------------------------------------------------------------------------------------
-				// Table Starts
+				// TABLE STARTS
 
 				PdfPTable pageBodyDataGrid = new PdfPTable(9) { WidthPercentage = 90 };
 				pageBodyDataGrid.SetWidths(new float[] { 2f, 8f, 4f, 4f, 4f, 4f, 4f, 4f, 6f});
 				
-				PdfPCell seqNo = new PdfPCell(new Phrase(new Chunk("#", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell seqNo = new PdfPCell(new Phrase(new Chunk("S.No.", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
 				PdfPCell itemName = new PdfPCell(new Phrase(new Chunk("Item Name", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
 				PdfPCell bagsCount = new PdfPCell(new Phrase(new Chunk("Bags Count", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
 				PdfPCell weight = new PdfPCell(new Phrase(new Chunk("Weight", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
-				PdfPCell amount = new PdfPCell(new Phrase(new Chunk("Rate", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
-				PdfPCell rate = new PdfPCell(new Phrase(new Chunk("Amount", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell rate = new PdfPCell(new Phrase(new Chunk("Rate", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell amount = new PdfPCell(new Phrase(new Chunk("Amount", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
 				PdfPCell moist = new PdfPCell(new Phrase(new Chunk("Moist", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
 				PdfPCell claim = new PdfPCell(new Phrase(new Chunk("Claim", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
 				PdfPCell finalAmount = new PdfPCell(new Phrase(new Chunk("Final Amount", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
@@ -288,18 +365,133 @@ namespace RiceMill_Windows_Application
 				pageBodyDataGrid.AddCell(claim);
 				pageBodyDataGrid.AddCell(finalAmount);
 
+				var grid = DataGridView;
+				int gridRows = grid.Items.Count;
 
-		
+				int tempSeqNoVariable = 1;
+				int bagsCountTotal = 0;
+				float amountTotal = 0;
+				float finalAmountTotal = 0;
+				
+
+				for (int i = 0; i < gridRows; i++)
+				{
+					BindingData item = (BindingData)grid.Items[i];
+					bagsCountTotal = Convert.ToInt32(item?.BagsCount.ToString()) + bagsCountTotal;
+					individaulWeight = float.Parse(totalWeightInput.Text) / bagsCountTotal;
+				}
+
+				for (int i = 0; i < gridRows; i++)
+				{						
+					BindingData item = (BindingData)grid.Items[i];
+
+					PdfPCell seqNoData = new PdfPCell(new Phrase(new Chunk(tempSeqNoVariable.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+					PdfPCell itemNameData = new PdfPCell(new Phrase(new Chunk(item?.ItemName.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+					PdfPCell bagsCountData = new PdfPCell(new Phrase(new Chunk(item?.BagsCount.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+					PdfPCell weightData = new PdfPCell(new Phrase(new Chunk(individaulWeight.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+					PdfPCell rateData = new PdfPCell(new Phrase(new Chunk(item?.Rate.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+					PdfPCell amountData = new PdfPCell(new Phrase(new Chunk(item?.Amount.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+					PdfPCell moistData = new PdfPCell(new Phrase(new Chunk(item?.Moisture.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+					PdfPCell claimData = new PdfPCell(new Phrase(new Chunk(item?.Claim.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+					PdfPCell finalAmountData = new PdfPCell(new Phrase(new Chunk(item?.FinalAmount.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+
+					bagsCountTotal = Convert.ToInt32(item?.BagsCount.ToString()) + bagsCountTotal;
+					amountTotal = float.Parse(item?.Amount.ToString()) + amountTotal;
+					finalAmountTotal = float.Parse(item?.FinalAmount.ToString()) + finalAmountTotal;
+
+					pageBodyDataGrid.AddCell(seqNoData);
+					pageBodyDataGrid.AddCell(itemNameData);
+					pageBodyDataGrid.AddCell(bagsCountData);
+					pageBodyDataGrid.AddCell(weightData);
+					pageBodyDataGrid.AddCell(rateData);
+					pageBodyDataGrid.AddCell(amountData);
+					pageBodyDataGrid.AddCell(moistData);
+					pageBodyDataGrid.AddCell(claimData);
+					pageBodyDataGrid.AddCell(finalAmountData);
+					tempSeqNoVariable += 1; 
+				}
+
+				PdfPTable pageFooter = new PdfPTable(9) { WidthPercentage = 90 };
+				pageFooter.SetWidths(new float[] { 2f, 8f, 4f, 4f, 4f, 4f, 4f, 4f, 6f });
+				
+				PdfPCell bagsCountTotalData = new PdfPCell(new Phrase(new Chunk(bagsCountTotal.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell totalVariable = new PdfPCell(new Phrase(new Chunk("Total", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell amountTotalData = new PdfPCell(new Phrase(new Chunk(amountTotal.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell finalAmountTotalData = new PdfPCell(new Phrase(new Chunk(finalAmountTotal.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell totalBlank = new PdfPCell();
+												
+				pageFooter.AddCell(totalBlank);
+				pageFooter.AddCell(totalVariable);
+				pageFooter.AddCell(bagsCountTotalData);
+				pageFooter.AddCell(totalBlank);
+				pageFooter.AddCell(totalBlank);
+				pageFooter.AddCell(amountTotalData);
+				pageFooter.AddCell(totalBlank);
+				pageFooter.AddCell(totalBlank);
+				pageFooter.AddCell(finalAmountTotalData);
+
+				//-----------------------------------------------------------------------------------------------------------------------------------------------
+				// DEDUCTION STARTS
+
+				int kantaDeduction = Convert.ToInt32(kantaInput.Text);
+				float gaadiExpenseDeduction = (float.Parse(totalWeightInput.Text)) * 4;
+				float amountAfterDeduction = 0;
+				if (finalAmountTotal != 0)
+				{
+					amountAfterDeduction = finalAmountTotal - (kantaDeduction + gaadiExpenseDeduction);
+				}
+				
+				PdfPTable amountDeductions = new PdfPTable(5);
+				amountDeductions.SetWidths(new float[] { 8f, 4f, 13f, 8f, 4f });
+
+				PdfPCell kantaDeductionAmount = new PdfPCell(new Phrase(new Chunk("Kanta: ", FontFactory.GetFont("HELVETICA", 8, Font.BOLD))));
+				PdfPCell kantaDeductionAmountData = new PdfPCell(new Phrase(new Chunk("- " + kantaDeduction.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell gaadiExpenseAmount = new PdfPCell(new Phrase(new Chunk("Gaadi Expense: ", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell gaadiExpenseAmountData = new PdfPCell(new Phrase(new Chunk("- " + gaadiExpenseDeduction.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell resultantAmount = new PdfPCell(new Phrase(new Chunk("Amount Payable: ", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				PdfPCell resultantAmountData = new PdfPCell(new Phrase(new Chunk(amountAfterDeduction.ToString() + "/-", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+				
+				
+				kantaDeductionAmount.Border = kantaDeductionAmountData.Border = gaadiExpenseAmount.Border = gaadiExpenseAmountData.Border = resultantAmount.Border = resultantAmountData.Border = moistAllowed.Border = moistAllowedData.Border = vehicleNumber.Border = vehicleNumberData.Border = totalweight.Border = totalWeightData.Border = blank.Border = 0;
+				
+				amountDeductions.AddCell(kantaDeductionAmount);
+				amountDeductions.AddCell(kantaDeductionAmountData);
+				amountDeductions.AddCell(blank);
+				amountDeductions.AddCell(blank);
+				amountDeductions.AddCell(blank);
+				amountDeductions.AddCell(gaadiExpenseAmount);
+				amountDeductions.AddCell(gaadiExpenseAmountData);
+				amountDeductions.AddCell(blank);
+				amountDeductions.AddCell(resultantAmount);
+				amountDeductions.AddCell(resultantAmountData);
+
+				
+
+				document.Open();
+				document.Add(lineBreaks);
 				document.Add(pageHeader);
 				document.Add(pageTitle);
 				document.Add(lineBreaks);
 				document.Add(pageBody);
 				document.Add(lineBreaks);
 				document.Add(pageBodyDataGrid);
+				document.Add(pageFooter);
+				document.Add(lineBreaks);
+				document.Add(amountDeductions);
 
-				MessageBox.Show("Document created Successfully! Click OK to continue...");
+				MessageBoxResult result = MessageBox.Show("Are you sure you want to print the Document?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question);
+				switch (result)
+				{
+					case MessageBoxResult.Yes:
+						MessageBox.Show("Document created Successfully! Click OK to continue...", "Result", MessageBoxButton.OK, MessageBoxImage.Information);
+						break;
+					case MessageBoxResult.No:
+						document.Close();
+						return;
+				}
+				
 				document.Close();
-				System.Diagnostics.Process.Start(@paddyPrintDocumentPath);
+				System.Diagnostics.Process.Start(@fileName);
 
 			}
 			catch (Exception ex)
@@ -307,12 +499,19 @@ namespace RiceMill_Windows_Application
 				MessageBox.Show(ex.Message.ToString());
 			}
 		}
-	
-		private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+
+		private void NumericValidation(object sender, TextCompositionEventArgs e)
+		{
+			Regex regex = new Regex("[^0-9]+");
+			e.Handled = regex.IsMatch(e.Text);
+		}
+		private void NumericFloatValidation(object sender, TextCompositionEventArgs e)
 		{
 			Regex regex = new Regex("[^0-9.]+");
 			e.Handled = regex.IsMatch(e.Text);
 		}
+		
+		
 
 		public class BindingData
 		{
