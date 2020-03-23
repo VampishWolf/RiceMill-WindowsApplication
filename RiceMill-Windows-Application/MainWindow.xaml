@@ -18,7 +18,7 @@
                     </Grid.RowDefinitions>
                     <Canvas Margin="109,23,109.4,57.8">
                         <Label x:Name="partyNameLabel" Content="Party Name" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="1" />
-                        <TextBox x:Name="partyNameInput" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="34" Canvas.Left="149" Canvas.Top="1" ToolTip="Enter the name of the party" AutomationProperties.IsRequiredForForm="True" TabIndex="1" />
+                        <TextBox x:Name="partyNameInput" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="34" Canvas.Left="149" Canvas.Top="0" ToolTip="Enter the name of the party" AutomationProperties.IsRequiredForForm="True" TabIndex="1" />
                         <Label x:Name="addressLabel" Content="Address" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="37" />
                         <TextBox x:Name="addressInput" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="32" Canvas.Left="149" Canvas.Top="38" ToolTip="Enter the address of the party" AutomationProperties.IsRequiredForForm="True" TabIndex="2" />
                         <Label x:Name="vehicleNumberLabel" Content="Vehicle Number" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="130" Canvas.Top="73" />
@@ -26,13 +26,15 @@
                         <Label x:Name="totalWeightLabel" Content="Total Weight" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="109" />
                         <TextBox x:Name="totalWeightInput" PreviewTextInput="NumericFloatValidation" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="33" Canvas.Left="149" Canvas.Top="112" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the total weight" TabIndex="4" />
                         <Label x:Name="unitLabel" Content="(Qtls.)" FontSize="12" Height="25" Width="45" HorizontalAlignment="Left" Canvas.Left="380" Canvas.Top="116"/>
-                        <Label x:Name="dateLabel" Content="Date" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="50" Canvas.Left="822" />
-                        <Label x:Name="dateDisplayLabel" Content="DateDisplay" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="280" Canvas.Left="897" ToolTip="Current time display" />
-                        <Label x:Name="moistAllowedLabel" Content="Moist Allowed" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="120" Canvas.Left="822" Canvas.Top="37" />
-                        <TextBox x:Name="moistAllowedInput" PreviewTextInput="NumericFloatValidation" FontSize="16" Text="18" MaxLength="5" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalAlignment="Right" Width="140"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="32" Canvas.Left="957" Canvas.Top="38" ToolTip="Enter the moisture allowed limit" AutomationProperties.IsRequiredForForm="True" />
+                        <Label x:Name="totalBagsLabel" Content="Total Bags" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="149" />
+                        <TextBox x:Name="totalBagsInput" PreviewTextInput="NumericFloatValidation" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="33" Canvas.Left="149" Canvas.Top="149" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the total bags" TabIndex="5" />
+                        <Label x:Name="dateLabel" Content="Date" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="50" Canvas.Left="707" Canvas.Top="1"/>
+                        <Label x:Name="dateDisplayLabel" Content="DateDisplay" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="280" Canvas.Left="822" ToolTip="Current time display" />
+                        <Label x:Name="moistAllowedLabel" Content="Moist Allowed" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Right" Width="120" Canvas.Left="707" Canvas.Top="37" />
+                        <TextBox x:Name="moistAllowedInput" PreviewTextInput="NumericFloatValidation" FontSize="16" Text="18" MaxLength="5" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalAlignment="Right" Width="227"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="32" Canvas.Left="870" Canvas.Top="38" ToolTip="Enter the moisture allowed limit" AutomationProperties.IsRequiredForForm="True" />
                         <Label x:Name="percentageSignLabel" Content="%" FontSize="16" HorizontalAlignment="Right" Width="24" Height="32" Canvas.Left="1073" Canvas.Top="39" />
 
-                        <Separator Height="11" Canvas.Left="388" Margin="0" Canvas.Top="68" Width="114" RenderTransformOrigin="0.5,0.5">
+                        <Separator Height="12" Canvas.Left="370" Margin="0" Canvas.Top="86" Width="150" RenderTransformOrigin="0.5,0.5">
                             <Separator.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
@@ -43,8 +45,8 @@
                             </Separator.RenderTransform>
                         </Separator>
 
-                        <Image x:Name="UnlockedImage" Height="20" Width="18" Canvas.Left="437" Canvas.Top="62" Source="assets/Unlocked.jpg"/>
-                        <Button x:Name="LockedImage" Height="20" Width="18" Canvas.Left="437" Canvas.Top="62" Click="Unlock_Click" ToolTip="Click to unlock the fields"  Visibility="Hidden">
+                        <Image x:Name="UnlockedImage" Height="20" Width="18" Canvas.Left="437" Canvas.Top="80" Source="assets/Unlocked.jpg"/>
+                        <Button x:Name="LockedImage" Height="20" Width="18" Canvas.Left="437" Canvas.Top="80" Click="Unlock_Click" ToolTip="Click to unlock the fields"  Visibility="Hidden">
                             <Button.Template>
                                 <ControlTemplate>
                                     <Image Source="Locked.jpg" Height="20" Width="18" />
@@ -53,8 +55,8 @@
                         </Button>
 
 
-                        <Label x:Name="itemNameLabel" Content="Item Name" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="149" />
-                        <ComboBox x:Name="itemNameInput" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="33" Canvas.Left="149" Canvas.Top="149" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the name of the item" TabIndex="5">
+                        <Label x:Name="itemNameLabel" Content="Item Name" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="185" />
+                        <ComboBox x:Name="itemNameInput" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="33" Canvas.Left="149" Canvas.Top="186" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the name of the item" TabIndex="6">
                             <ComboBoxItem IsSelected="True" IsEnabled="False" >Choose an Item</ComboBoxItem>
                             <ComboBoxItem>Mansuri</ComboBoxItem>
                             <ComboBoxItem>Lamba</ComboBoxItem>
@@ -65,19 +67,19 @@
                             <ComboBoxItem>Desi Fine Paddy</ComboBoxItem>
                             <ComboBoxItem>Discolour</ComboBoxItem>
                         </ComboBox>
-                        <Label x:Name="bagsCountLabel" Content="Bags Count" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="186" />
-                        <TextBox x:Name="bagsCountInput" PreviewTextInput="NumericValidation" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="31" Canvas.Left="149" Canvas.Top="186" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the total number of bags" TabIndex="6" />
-                        <Label x:Name="rateLabel" Content="Rate" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Left="707" Canvas.Top="151" />
-                        <TextBox x:Name="rateInput" PreviewTextInput="NumericFloatValidation" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="31" Canvas.Left="822" Canvas.Top="151" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the rate of the item" TabIndex="7" />
+                        <Label x:Name="bagsCountLabel" Content="Bags Count" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Top="111" Canvas.Left="707" />
+                        <TextBox x:Name="bagsCountInput" PreviewTextInput="NumericValidation" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="31" Canvas.Left="822" Canvas.Top="112" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the total number of bags" TabIndex="7" />
+                        <Label x:Name="rateLabel" Content="Rate" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Left="707" Canvas.Top="149" />
+                        <TextBox x:Name="rateInput" PreviewTextInput="NumericFloatValidation" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="31" Canvas.Left="822" Canvas.Top="149" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the rate of the item" TabIndex="8" />
                         <Label x:Name="moistLabel" Content="Moist" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="110" Canvas.Left="707" Canvas.Top="185" />
-                        <TextBox x:Name="moistInput" PreviewTextInput="NumericFloatValidation" MaxLength="5" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="32" Canvas.Left="822" Canvas.Top="186" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the moisture reading" TabIndex="8" />
-                        <Button Content="ADD" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="655" Canvas.Top="243" Cursor="Hand" Click="Add_Click" ToolTip="Click to add the item" TabIndex="9"/>
-                        <Button Content="UPDATE" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="830" Canvas.Top="243" Cursor="Hand" Click="Update_Click" ToolTip="Click to update the item" TabIndex="10"/>
-                        <Button Content="DELETE" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="1000" Canvas.Top="243" Cursor="Hand" Click="Delete_Click" ToolTip="Click to delete the item" TabIndex="11"/>
-                        <Button Content="PRINT" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="1000" Canvas.Top="562" Cursor="Hand" Click="Print_Click" ToolTip="Click to create the Document" TabIndex="13"/>
-                        <Button Content="RESET" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="860" Canvas.Top="562" Cursor="Hand" Click="Reset_Click" ToolTip="Click to reset the data" TabIndex="14"/>
+                        <TextBox x:Name="moistInput" PreviewTextInput="NumericFloatValidation" MaxLength="5" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="32" Canvas.Left="822" Canvas.Top="186" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the moisture reading" TabIndex="9" />
+                        <Button Content="ADD" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="655" Canvas.Top="243" Cursor="Hand" Click="Add_Click" ToolTip="Click to add the item" TabIndex="10"/>
+                        <Button Content="UPDATE" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="830" Canvas.Top="243" Cursor="Hand" Click="Update_Click" ToolTip="Click to update the item" TabIndex="11"/>
+                        <Button Content="DELETE" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="1000" Canvas.Top="243" Cursor="Hand" Click="Delete_Click" ToolTip="Click to delete the item" TabIndex="12"/>
+                        <Button Content="PRINT" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="1000" Canvas.Top="562" Cursor="Hand" Click="Print_Click" ToolTip="Click to create the Document" TabIndex="14"/>
+                        <Button Content="RESET" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right" Width="120" Canvas.Left="860" Canvas.Top="562" Cursor="Hand" Click="Reset_Click" ToolTip="Click to reset the data" TabIndex="15"/>
                         <Label x:Name="kanta" Content="Dharam Kanta" FontSize="16" FontWeight="Bold" Height="32" HorizontalAlignment="Left" Width="119" Canvas.Top="559" />
-                        <ComboBox x:Name="kantaInput" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="33" Canvas.Left="149" Canvas.Top="559" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the Kanta Deduction" TabIndex="12">
+                        <ComboBox x:Name="kantaInput" FontSize="16" HorizontalAlignment="Left" Width="275" SnapsToDevicePixels="True" ClipToBounds="True" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="33" Canvas.Left="149" Canvas.Top="559" AutomationProperties.IsRequiredForForm="True" ToolTip="Enter the Kanta Deduction" TabIndex="13">
                             <ComboBoxItem IsEnabled="False" Content="Choose Deduction" IsSelected="True" />
                             <ComboBoxItem Content="30"/>
                             <ComboBoxItem Content="50"/>
