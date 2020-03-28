@@ -46,10 +46,10 @@
                         </Separator>
 
                         <Image x:Name="UnlockedImage" Height="20" Width="18" Canvas.Left="437" Canvas.Top="80" Source="assets/Unlocked.jpg"/>
-                        <Button x:Name="LockedImage" Height="20" Width="18" Canvas.Left="437" Canvas.Top="80" Click="Unlock_Click" ToolTip="Click to unlock the fields"  Visibility="Hidden">
+                        <Button x:Name="LockedImage" Height="20" Width="18" Canvas.Left="437" Canvas.Top="80" Click="Unlock_Click" ToolTip="Click to unlock the fields" Visibility="Hidden">
                             <Button.Template>
                                 <ControlTemplate>
-                                    <Image Source="Locked.jpg" Height="20" Width="18" />
+                                    <Image Source="assets/Locked.jpg" Height="20" Width="18" />
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>

@@ -48,7 +48,7 @@ namespace RiceMill_Windows_Application
 		}
 
 		public int serialnumber = 1;
-
+		
 		private void Unlock_Click(object sender, RoutedEventArgs e)
 		{
 			partyNameInput.IsEnabled = addressInput.IsEnabled = vehicleNumberInput.IsEnabled = totalWeightInput.IsEnabled = totalBagsInput.IsEnabled = true;
@@ -75,6 +75,16 @@ namespace RiceMill_Windows_Application
 					MessageBox.Show("Please enter the Vehicle Number", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
 					return;
 				}
+				else if (totalWeightInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Total Weight", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				}
+				else if (totalBagsInput.Text == "")
+				{
+					MessageBox.Show("Please enter the Total Bags", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
+					return;
+				}
 				else if (itemNameInput.SelectedIndex == 0)
 				{
 					MessageBox.Show("Please select the Item Name", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -95,15 +105,23 @@ namespace RiceMill_Windows_Application
 					MessageBox.Show("Please enter the Moisture", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
 					return;
 				}
-
-				int bagscount = Convert.ToInt32(bagsCountInput.Text);
-				var name = itemNameInput.Text;
+								
 				float totalweight = float.Parse(totalWeightInput.Text);
-				float totalbags = float.Parse(totalBagsInput.Text);
+				int totalbags = Convert.ToInt32(totalBagsInput.Text);
+				var name = itemNameInput.Text;
+				int bagscount = Convert.ToInt32(bagsCountInput.Text);				
+				if (totalbags < bagscount)
+				{
+					MessageBox.Show("Bags Count cannot be more than Total Bags!", "Warning Message", MessageBoxButton.OK, MessageBoxImage.Warning);
+					return;
+				}
+				
 				float averageweight = totalweight / totalbags;
 				float finalWeight = averageweight * bagscount;
+				float roundedFinalWeight = (float)Math.Round(finalWeight, 2);
 				float rate = float.Parse(rateInput.Text);
-				float amount = bagscount * rate;
+				float amount = finalWeight * rate;
+				float roundedAmount = (float)Math.Round(amount, 2);
 				float moistallowed = float.Parse(moistAllowedInput.Text);
 				float moist = float.Parse(moistInput.Text);
 				float claim;
@@ -121,11 +139,12 @@ namespace RiceMill_Windows_Application
 					return;
 				}
 				float claimant = (claim * amount) / 100;
-				float finalamount = amount - claimant;
+				float roundedClaimant = (float)Math.Round(claimant, 2);
+				float finalamount = roundedAmount - roundedClaimant;
 				var grid = DataGridView;
 				int gridRows = grid.Items.Count;
 
-				grid.Items.Add(new BindingData { Number = serialnumber, BagsCount = bagscount, ItemName = name, Weight = finalWeight, Rate = rate, Amount = amount, Moisture = moist, Claim = claimant, FinalAmount = finalamount });
+				grid.Items.Add(new BindingData { Number = serialnumber, BagsCount = bagscount, ItemName = name, Weight = roundedFinalWeight, Rate = rate, Amount = roundedAmount, Moisture = moist, Claim = roundedClaimant, FinalAmount = finalamount });
 				grid.Items.Refresh();
 				serialnumber += 1;
 
@@ -172,14 +191,16 @@ namespace RiceMill_Windows_Application
 					return;
 				}
 
+				float totalweight = float.Parse(totalWeightInput.Text);
+				int totalbags = Convert.ToInt32(totalBagsInput.Text);
 				int bagscount = Convert.ToInt32(bagsCountInput.Text);
 				var name = itemNameInput.Text;
-				float totalweight = float.Parse(totalWeightInput.Text);
-				float totalbags = float.Parse(totalBagsInput.Text);
 				float averageweight = totalweight / totalbags;
 				float finalWeight = averageweight * bagscount;
+				float roundedFinalWeight = (float)Math.Round(finalWeight, 2);
 				float rate = float.Parse(rateInput.Text);
-				float amount = bagscount * rate;
+				float amount = finalWeight * rate;
+				float roundedAmount = (float)Math.Round(amount, 2);
 				float moistallowed = float.Parse(moistAllowedInput.Text);
 				float moist = float.Parse(moistInput.Text);
 				float claim;
@@ -197,18 +218,20 @@ namespace RiceMill_Windows_Application
 					return;
 				}
 				float claimant = (claim * amount) / 100;
-				float finalamount = amount - claimant;
+				float roundedClaimant = (float)Math.Round(claimant, 2);
+				float finalamount = roundedAmount - roundedClaimant;
+				
 				var grid = DataGridView;
 				if (grid.SelectedItem != null)
 				{
 					BindingData item = (BindingData)grid.SelectedItem;
 					item.BagsCount = bagscount;
 					item.ItemName = name;
-					item.Weight = finalWeight;
+					item.Weight = roundedFinalWeight;
 					item.Rate = rate;
-					item.Amount = amount;
+					item.Amount = roundedAmount;
 					item.Moisture = moist;
-					item.Claim = claimant;
+					item.Claim = roundedClaimant;
 					item.FinalAmount = finalamount;
 
 					grid.Items.Refresh();
@@ -270,9 +293,9 @@ namespace RiceMill_Windows_Application
 					MessageBox.Show("Please enter the Kanta Deduction", "Information Message", MessageBoxButton.OK, MessageBoxImage.Information);
 					return;
 				}
-
+				
 				string fileName = string.Empty;                                         // FILE NAMING CONVENTION
-																						/*DateTime fileCreationDatetime = DateTime.Now;*/                       // USE TO ADD DATE IN FILENAME
+				/*DateTime fileCreationDatetime = DateTime.Now;*/                       // USE TO ADD DATE IN FILENAME
 				fileName = "PaddyPrint.PDF"; /*string.Format("{0}.pdf", fileCreationDatetime.ToString(@"yyyyMMdd") + "_" + fileCreationDatetime.ToString(@"HHmmss"));*/
 
 				//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -286,6 +309,27 @@ namespace RiceMill_Windows_Application
 
 				using (MemoryStream memoryStream = new MemoryStream())
 				{
+					var grid = DataGridView;
+					int gridRows = grid.Items.Count;
+
+					int tempSeqNoVariable = 1;
+					int bagsCountTotal = 0;
+					float weightTotal = 0;
+					float amountTotal = 0;
+					float finalAmountTotal = 0;
+					int totalbags = Convert.ToInt32(totalBagsInput.Text);
+
+					for (int i = 0; i < gridRows; i++)
+					{
+						BindingData item = (BindingData)grid.Items[i];
+						bagsCountTotal = Convert.ToInt32(item?.BagsCount.ToString()) + bagsCountTotal;
+						weightTotal = float.Parse(item?.Weight.ToString()) + weightTotal;
+					}
+					if (totalbags < bagsCountTotal)
+					{
+						MessageBox.Show("Bags entered are more than the Total Bags value!\nPlease make the corrections.", "Warning Message", MessageBoxButton.OK, MessageBoxImage.Warning);
+						return;
+					}
 					PdfWriter.GetInstance(document, new FileStream(fileName, FileMode.Create));
 					//PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
@@ -388,23 +432,7 @@ namespace RiceMill_Windows_Application
 					pageBodyDataGrid.AddCell(claim);
 					pageBodyDataGrid.AddCell(finalAmount);
 
-					var grid = DataGridView;
-					int gridRows = grid.Items.Count;
-
-					int tempSeqNoVariable = 1;
-					int bagsCountTotal = 0;
-					float weightTotal = 0;
-					float amountTotal = 0;
-					float finalAmountTotal = 0;
-
-
-					for (int i = 0; i < gridRows; i++)
-					{
-						BindingData item = (BindingData)grid.Items[i];
-						bagsCountTotal = Convert.ToInt32(item?.BagsCount.ToString()) + bagsCountTotal;
-						weightTotal = float.Parse(item?.Weight.ToString()) + weightTotal;
-					}
-
+					
 					for (int i = 0; i < gridRows; i++)
 					{
 						BindingData item = (BindingData)grid.Items[i];
@@ -459,6 +487,7 @@ namespace RiceMill_Windows_Application
 
 					int kantaDeduction = Convert.ToInt32(kantaInput.Text);
 					float gaadiExpenseDeduction = (float.Parse(totalWeightInput.Text)) * 4;
+					int roundedGaadiExpenseDeduction = (int)Math.Round(gaadiExpenseDeduction, 0);
 					float amountAfterDeduction = 0;
 					int roundedAmountAfterDeduction = 0;
 
@@ -471,10 +500,10 @@ namespace RiceMill_Windows_Application
 					PdfPTable amountDeductions = new PdfPTable(5);
 					amountDeductions.SetWidths(new float[] { 8f, 4f, 13f, 8f, 4f });
 
-					PdfPCell kantaDeductionAmount = new PdfPCell(new Phrase(new Chunk("Kanta: ", FontFactory.GetFont("HELVETICA", 8, Font.BOLD))));
+					PdfPCell kantaDeductionAmount = new PdfPCell(new Phrase(new Chunk("Dharam Kanta: ", FontFactory.GetFont("HELVETICA", 8, Font.BOLD))));
 					PdfPCell kantaDeductionAmountData = new PdfPCell(new Phrase(new Chunk("- " + kantaDeduction.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
 					PdfPCell gaadiExpenseAmount = new PdfPCell(new Phrase(new Chunk("Gaadi Expense: ", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
-					PdfPCell gaadiExpenseAmountData = new PdfPCell(new Phrase(new Chunk("- " + gaadiExpenseDeduction.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
+					PdfPCell gaadiExpenseAmountData = new PdfPCell(new Phrase(new Chunk("- " + roundedGaadiExpenseDeduction.ToString(), FontFactory.GetFont("Verdana", 8, Font.BOLD))));
 					PdfPCell resultantAmount = new PdfPCell(new Phrase(new Chunk("Amount Payable: ", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
 					PdfPCell resultantAmountData = new PdfPCell(new Phrase(new Chunk(roundedAmountAfterDeduction.ToString() + "/-", FontFactory.GetFont("Verdana", 8, Font.BOLD))));
 
