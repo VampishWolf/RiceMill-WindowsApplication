@@ -120,7 +120,7 @@ namespace RiceMill_Windows_Application
 				float finalWeight = averageweight * bagscount;
 				float roundedFinalWeight = (float)Math.Round(finalWeight, 2);
 				float rate = float.Parse(rateInput.Text);
-				float amount = finalWeight * rate;
+				float amount = roundedFinalWeight * rate;
 				float roundedAmount = (float)Math.Round(amount, 2);
 				float moistallowed = float.Parse(moistAllowedInput.Text);
 				float moist = float.Parse(moistInput.Text);
@@ -199,7 +199,7 @@ namespace RiceMill_Windows_Application
 				float finalWeight = averageweight * bagscount;
 				float roundedFinalWeight = (float)Math.Round(finalWeight, 2);
 				float rate = float.Parse(rateInput.Text);
-				float amount = finalWeight * rate;
+				float amount = roundedFinalWeight * rate;
 				float roundedAmount = (float)Math.Round(amount, 2);
 				float moistallowed = float.Parse(moistAllowedInput.Text);
 				float moist = float.Parse(moistInput.Text);
